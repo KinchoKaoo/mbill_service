@@ -22,26 +22,7 @@ public static class JwtBearerSetup
         })
         .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>//配置JWT
         {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                // 密钥必须匹配
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = jsonWebTokenSetting.SecurityKey,
-
-                // 验证Issuer
-                ValidateIssuer = true,
-                ValidIssuer = jsonWebTokenSetting.Issuer,
-
-                // 验证Audience
-                ValidateAudience = true,
-                ValidAudience = jsonWebTokenSetting.Audience,
-
-                // 验证过期时间
-                ValidateLifetime = true,
-
-                //偏移设置为了0s,用于测试过期策略,完全按照access_token的过期时间策略，默认原本为5分钟
-                ClockSkew = TimeSpan.Zero
-            };
+            options.TokenValidationParameters = jsonWebTokenSetting.TokenValidationParameters;
 
 
             //使用Authorize设置为需要登录时，返回json格式数据。
@@ -85,7 +66,7 @@ public static class JwtBearerSetup
 
                     context.Response.ContentType = "application/json";
                     context.Response.StatusCode = statusCode;
-                    await context.Response.WriteAsync(new ServiceResult(code, message).ToString());
+                    await context.Response.WriteAsync(new ServiceResult(code, message).ToString()!);
 
                 }
             };
@@ -94,15 +75,17 @@ public static class JwtBearerSetup
 
     private static JwtSettings AddSecurity(this IServiceCollection services)
     {
-        JwtSettings jsonWebTokenSettings = new JwtSettings(
-                       Appsettings.JwtBearer.SecurityKey,
-                       TimeSpan.FromSeconds(Appsettings.JwtBearer.Expires),
-                       Appsettings.JwtBearer.Audience,
-                       Appsettings.JwtBearer.Issuer
-                   );
+        var jsonWebTokenSettings = new JwtSettings(
+            Appsettings.JwtBearer.SecurityKey,
+            TimeSpan.FromSeconds(Appsettings.JwtBearer.Expires),
+            Appsettings.JwtBearer.Audience,
+            Appsettings.JwtBearer.Issuer
+        );
+
         services.AddHashService();
-        services.AddICryptographyService("Memoyu.Core-cryptography");
-        services.AddJwtService(jsonWebTokenSettings);
+        services.AddCryptographyService("Memoyu.Core-cryptography");
+        services.AddSingleton(jsonWebTokenSettings);
+        services.AddCustomJwtService();
         return jsonWebTokenSettings;
     }
 }

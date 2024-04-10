@@ -12,6 +12,7 @@ public class Program
             .WriteTo.MongoDBBson(cfg =>
             {
                 var mongoDbInstance = new MongoClient(Appsettings.MongoDBCon).GetDatabase(Appsettings.MongoDBName);
+                Console.WriteLine(Appsettings.MongoDBCon);
                 cfg.SetMongoDatabase(mongoDbInstance);
                 cfg.SetCollectionName("logs");      
             }, LogEventLevel.Warning)
@@ -52,10 +53,8 @@ public class Program
             .UseServiceProviderFactory(new AutofacServiceProviderFactory())//添加Autofac服务工厂
             .ConfigureWebHostDefaults(webBuilder =>
             {
-                webBuilder.UseStartup<Startup>()
+                webBuilder.UseStartup<Startup>();
 #if DEBUG
-            .UseUrls("http://*:9000");
 #endif
-                ;
             }).UseSerilog();//构建Serilog;
 }

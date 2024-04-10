@@ -1,5 +1,8 @@
 ﻿using EasyCaching.Core;
 using Mbill.Core.Security.Dto;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Mbill.Service.Core.Auth;
 
@@ -11,6 +14,7 @@ public class JwtTokenSvc : IJwtTokenSvc
     private readonly IUserIdentitySvc _userIdentityService;
     private readonly IJwtService _jsonWebTokenService;
     private readonly IEasyCachingProvider _cachingProvider;
+    private readonly IConfiguration _configuration;
 
     public JwtTokenSvc(
         ILogger<JwtTokenSvc> logger,
@@ -18,7 +22,7 @@ public class JwtTokenSvc : IJwtTokenSvc
         IUserRoleRepo userRoleRepo,
         IUserIdentitySvc userIdentityService,
         IJwtService jsonWebTokenService,
-        IEasyCachingProvider cachingProvider)
+        IEasyCachingProvider cachingProvider, IConfiguration configuration)
     {
         _logger = logger;
         _userRepo = userRepo;
@@ -26,6 +30,7 @@ public class JwtTokenSvc : IJwtTokenSvc
         _userIdentityService = userIdentityService;
         _jsonWebTokenService = jsonWebTokenService;
         _cachingProvider = cachingProvider;
+        _configuration = configuration;
     }
 
     public async Task<TokenDto> RefreshTokenAsync(string refreshToken)
@@ -66,7 +71,6 @@ public class JwtTokenSvc : IJwtTokenSvc
         }).ToList();
 
         await _cachingProvider.SetAsync(CacheKeyConst.UserRole(user.BId), userRoleCaches, TimeSpan.FromHours(6));
-
         string token = _jsonWebTokenService.Encode(claims);
 
         string refreshToken = GenerateToken();

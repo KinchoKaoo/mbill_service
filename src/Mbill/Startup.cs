@@ -38,8 +38,8 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            app.UseSwagger().UseSwaggerUI(() => GetType().GetTypeInfo().Assembly.GetManifestResourceStream("Mbill.index.html"));
         }
+        app.UseSwagger().UseSwaggerUI(() => GetType().GetTypeInfo().Assembly.GetManifestResourceStream("Mbill.index.html"));
         //øÁ”Ú
         app.UseCors(Appsettings.Cors.CorsName);
 

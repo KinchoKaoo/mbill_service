@@ -6,8 +6,6 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;1705;1591</NoWarn>
-    <DocumentationFile>Mbill.Service.xml</DocumentationFile>
-    <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,5 +15,9 @@
   <ItemGroup>
     <Folder Include="Core\Wx\Input\" />
   </ItemGroup>
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Mbill.Service.xml</DocumentationFile>
+  </PropertyGroup>
 
 </Project>

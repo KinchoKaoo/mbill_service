@@ -7,13 +7,14 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>Mbill.xml</DocumentationFile>
-    <OutputPath>bin\Debug\</OutputPath>
     <NoWarn>1701;1702;1705;1591</NoWarn>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <WarningLevel>3</WarningLevel>
   </PropertyGroup>
-
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Mbill.xml</DocumentationFile>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Logs\**" />
     <Content Remove="Logs\**" />
@@ -36,10 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Mbill.Infrastructure\Mbill.Infrastructure.csproj" />
     <ProjectReference Include="..\Mbill.Service\Mbill.Service.csproj" />
   </ItemGroup>
@@ -47,6 +44,10 @@
   <ItemGroup>
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="wwwroot\logo\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
   </ItemGroup>
 
 </Project>
