@@ -44,7 +44,7 @@ public class Program
         }
         finally
         {
-            Log.CloseAndFlush();
+            await Log.CloseAndFlushAsync();
         }
     }
 
@@ -54,7 +54,5 @@ public class Program
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
-#if DEBUG
-#endif
             }).UseSerilog();//¹¹½¨Serilog;
 }
